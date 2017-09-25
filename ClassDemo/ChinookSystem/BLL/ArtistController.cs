@@ -10,19 +10,15 @@ using ChinookSystem.DAL;
 using Chinook.Data.POCOs;
 using System.ComponentModel;
 #endregion
-
-namespace ChinookSystem.BLL
-{
+namespace ChinookSystem.BLL{
     [DataObject]
-    public class ArtistController
-    {
-        [DataObjectMethod(DataObjectMethodType.Select,false)]
-        public List<Artist> Artist_List()
+   public class ArtistController
+   {        [DataObjectMethod(DataObjectMethodType.Select,false)]
+       public List<Artist> Artist_List()
         {
             using (var context = new ChinookContext())
-            {
-                return context.Artists.ToList();
-            }
-        }
-    }
-}
+                       return context.Artists.ToList();
+         }
+       }
+   }
+
