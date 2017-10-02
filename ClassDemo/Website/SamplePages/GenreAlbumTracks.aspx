@@ -15,7 +15,8 @@
 
         this pattern repeats for all the levels of the data set.
 
-        repeater controls are good for complex structures
+        repeater controls are good for uncommon structures DTOS
+
     
     --%>
 
