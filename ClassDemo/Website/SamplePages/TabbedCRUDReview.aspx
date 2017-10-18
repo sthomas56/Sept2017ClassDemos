@@ -131,7 +131,8 @@
                         <ContentTemplate>
                             <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" DataObjectTypeName="Chinook.Data.Entities.Album" 
                                 DeleteMethod="Albums_Delete" InsertMethod="Albums_Add" OldValuesParameterFormatString="original_{0}" 
-                                SelectMethod="Album_List" TypeName="ChinookSystem.BLL.AlbumController" UpdateMethod="Albums_Update"></asp:ObjectDataSource>
+                                SelectMethod="Album_List" TypeName="ChinookSystem.BLL.AlbumController" UpdateMethod="Albums_Update"
+                                OnDeleted="CheckForException" OnInserted="CheckForException" OnUpdated="CheckForException" OnSelected="CheckForException"></asp:ObjectDataSource>
 
                             <asp:ListView ID="ListViewCRUD" runat="server" DataSourceID="ObjectDataSource1"
                                 DataKeyNames="AlbumId" InsertItemPosition="LastItem">
