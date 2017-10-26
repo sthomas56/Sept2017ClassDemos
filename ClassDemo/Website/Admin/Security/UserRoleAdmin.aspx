@@ -86,6 +86,7 @@
                                         CommandName="Insert">Insert</asp:LinkButton>
                                         <asp:LinkButton ID="CancelButton" runat="server" 
                                         CommandName="Cancel">Cancel</asp:LinkButton>
+
                                     </div>
                                     <div class="col-sm-2">
                                         <asp:TextBox ID="UserName" runat="server"
