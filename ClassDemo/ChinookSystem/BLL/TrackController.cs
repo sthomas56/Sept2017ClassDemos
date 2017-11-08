@@ -22,11 +22,98 @@ namespace ChinookSystem.BLL
         {
             using (var context = new ChinookContext())
             {
-                List<TrackList> results = null;
+                IEnumerable<TrackList> results = null;
+                switch (tracksby)
+                {
+                    case "Artist":
+                        {
+                            results = from x in context.Tracks
+                                      orderby x.Name
+                                      where x.Album.ArtistId == argid
+                                      select new TrackList
+                                      {
+                                          TrackID = x.TrackId,
+                                          Name = x.Name,
+                                          Title = x.Album.Title,
+                                          MediaName = x.MediaType.Name,
+                                          GenreName = x.Genre.Name,
+                                          Composer = x.Composer,
+                                          Milliseconds = x.Milliseconds,
+                                          Bytes = x.Bytes,
+                                          UnitPrice = x.UnitPrice
 
-               //code to go here
 
-                return results;
+                                      };
+                            break;
+                        }
+
+                    case "Album":
+                        {
+                            results = from x in context.Tracks
+                                      orderby x.Name
+                                      where x.AlbumId == argid
+                                      select new TrackList
+                                      {
+                                          TrackID = x.TrackId,
+                                          Name = x.Name,
+                                          Title = x.Album.Title,
+                                          MediaName = x.MediaType.Name,
+                                          GenreName = x.Genre.Name,
+                                          Composer = x.Composer,
+                                          Milliseconds = x.Milliseconds,
+                                          Bytes = x.Bytes,
+                                          UnitPrice = x.UnitPrice
+
+
+                                      };
+                            break;
+                        }
+                    case "Genre":
+                        {
+                            results = from x in context.Tracks
+                                      orderby x.Name
+                                      where x.GenreId == argid
+                                      select new TrackList
+                                      {
+                                          TrackID = x.TrackId,
+                                          Name = x.Name,
+                                          Title = x.Album.Title,
+                                          MediaName = x.MediaType.Name,
+                                          GenreName = x.Genre.Name,
+                                          Composer = x.Composer,
+                                          Milliseconds = x.Milliseconds,
+                                          Bytes = x.Bytes,
+                                          UnitPrice = x.UnitPrice
+
+
+                                      };
+                            break;
+                        }
+                    default:
+                        {
+                            results = from x in context.Tracks
+                                      orderby x.Name
+                                      where x.MediaTypeId == argid
+                                      select new TrackList
+                                      {
+                                          TrackID = x.TrackId,
+                                          Name = x.Name,
+                                          Title = x.Album.Title,
+                                          MediaName = x.MediaType.Name,
+                                          GenreName = x.Genre.Name,
+                                          Composer = x.Composer,
+                                          Milliseconds = x.Milliseconds,
+                                          Bytes = x.Bytes,
+                                          UnitPrice = x.UnitPrice
+
+
+                                      };
+                            break;
+                        }
+                }
+               
+
+                return results.ToList();
             }
         }//eom
 
