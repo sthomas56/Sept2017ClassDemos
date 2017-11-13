@@ -34,7 +34,7 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
         //PreRenderComplete occurs just after databinding page events
         //load a pointer to point to your DataPager control
         DataPager thePager = TracksSelectionList.FindControl("DataPager1") as DataPager;
-        if (thePager !=null)
+        if (thePager != null)
         {
             //this code will check the StartRowIndex to see if it is greater that the
             //total count of the collection
@@ -96,16 +96,41 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
                 PlayList.DataSource = playlist;
                 PlayList.DataBind();
 
-            });
+            }, "", "Here is your current playlist");
 
         }
 
     }
 
-    protected void TracksSelectionList_ItemCommand(object sender, 
+    protected void TracksSelectionList_ItemCommand(object sender,
         ListViewCommandEventArgs e)
     {
-        //code to go here
+        //ListViewCommandEventArgs paramter e contains the CommandArg value (TrackID from button )
+        if (string.IsNullOrEmpty(PlaylistName.Text))
+        {
+
+            MessageUserControl.ShowInfo("Warning", "Playlist Name is required");
+        }
+        else
+        {
+            string username = User.Identity.Name;
+            //TrackID is going to come from e.CommandArgument
+            //e.commandArgument is an object, therfore convert to string
+
+            int trackid = int.Parse(e.CommandArgument.ToString());
+
+            // the following code calls a BLL method to add to the database
+
+            MessageUserControl.TryRun(() =>
+            {
+                PlaylistTracksController sysmgr = new PlaylistTracksController();
+                List<UserPlaylistTrack> refreshresults = sysmgr.Add_TrackToPLaylist(PlaylistName.Text, username, trackid);
+                PlayList.DataSource = refreshresults;
+                PlayList.DataBind();
+
+            }, "Success", "track added to playlist");
+
+        }
     }
 
     protected void MoveUp_Click(object sender, EventArgs e)
