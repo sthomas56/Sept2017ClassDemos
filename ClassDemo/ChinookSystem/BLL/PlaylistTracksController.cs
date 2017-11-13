@@ -26,7 +26,7 @@ namespace ChinookSystem.BLL
 
 
                 var results = (from x in context.Playlists
-                              where x.Name.Equals(username)
+                              where x.UserName.Equals(username)
                               && x.Name.Equals(playlistname)
                               select x).FirstOrDefault();
 
@@ -52,7 +52,7 @@ namespace ChinookSystem.BLL
                 //Part One: handle playlist record
                 //query to get playlist ID
                 var exists = (from x in context.Playlists
-                               where x.Name.Equals(username)
+                               where x.UserName.Equals(username)
                                && x.Name.Equals(playlistname)
                                select x).FirstOrDefault();
                 //intialize the track number for the track going into PLaylistTracks

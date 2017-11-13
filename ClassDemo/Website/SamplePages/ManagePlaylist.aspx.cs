@@ -92,8 +92,8 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
                 //obtain the username from the security part of the application
                 string username = User.Identity.Name;
                 PlaylistTracksController sysmgr = new PlaylistTracksController();
-                List<UserPlaylistTrack> playlist = sysmgr.List_TracksForPlaylist(PlaylistName.Text, username);
-                PlayList.DataSource = playlist;
+                List<UserPlaylistTrack> info = sysmgr.List_TracksForPlaylist(PlaylistName.Text, username);
+                PlayList.DataSource = info;
                 PlayList.DataBind();
 
             }, "", "Here is your current playlist");
