@@ -115,8 +115,88 @@ namespace ChinookSystem.BLL
         {
             using (var context = new ChinookContext())
             {
-                //code to go here 
+                //query to get playlist ID
+                var exists = (from x in context.Playlists
+                              where x.UserName.Equals(username)
+                              && x.Name.Equals(playlistname)
+                              select x).FirstOrDefault();
 
+                if (exists == null)
+                {
+                    throw new Exception("Playlist has been removed");
+                }
+                else
+                {
+                    //limit your search to the particular playlist
+                    PlaylistTrack moveTrack = (from x in exists.PlaylistTracks
+                                               where x.TrackId == trackid
+                                               select x).FirstOrDefault();
+                    if(moveTrack == null)
+                    {
+                        throw new Exception("Playlist track has been removed");
+                    }
+                    else
+                    {
+                        PlaylistTrack otherTrack = null;
+                        if (direction.Equals("up"))
+                        {
+                            if (moveTrack.TrackNumber == 1)
+                            {
+                                throw new Exception("Track is already at the top, cannot move up");
+                            }
+                            else
+                            {
+                                //get the other track
+                                otherTrack = (from x in exists.PlaylistTracks
+                                              where x.TrackNumber == moveTrack.TrackNumber - 1
+                                              select x).FirstOrDefault();
+                                if (otherTrack == null)
+                                {
+                                    throw new Exception("Track cannot be moved up");
+                                }
+                                else
+                                {
+                                    //at this point you can exchange track numbers
+                                    moveTrack.TrackNumber -= 1;
+                                    otherTrack.TrackNumber += 1;
+
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //down
+
+                            if (moveTrack.TrackNumber >= exists.PlaylistTracks.Count)
+                            {
+                                throw new Exception("Track is already at the bottom, cannot move down");
+                            }
+                            else
+                            {
+                                //get the other track
+                                otherTrack = (from x in exists.PlaylistTracks
+                                              where x.TrackNumber == moveTrack.TrackNumber + 1
+                                              select x).FirstOrDefault();
+                                if (otherTrack == null)
+                                {
+                                    throw new Exception("Track cannot be moved down");
+                                }
+                                else
+                                {
+                                    //at this point you can exchange track numbers
+                                    moveTrack.TrackNumber += 1;
+                                    otherTrack.TrackNumber -= 1;
+
+                                }
+                            }
+                        }//eo up/down
+
+                        //stage changes to save
+                        context.Entry(moveTrack).Property(y => y.TrackNumber).IsModified = true;
+                        context.Entry(otherTrack).Property(y => y.TrackNumber).IsModified = true;
+                        context.SaveChanges();
+                    }
+                }
             }
         }//eom
 
