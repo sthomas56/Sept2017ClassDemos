@@ -79,7 +79,7 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
         if (string.IsNullOrEmpty(PlaylistName.Text))
         {
             //put out error message
-            //this for muses a user control called MessageuserControl
+            //this form uses a user control called MessageUserControl
             MessageUserControl.ShowInfo("Warning", "Playlist Name is required");
         }
         else
