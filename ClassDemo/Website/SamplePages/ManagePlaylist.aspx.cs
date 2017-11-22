@@ -269,6 +269,50 @@ public partial class SamplePages_ManagePlaylist : System.Web.UI.Page
     }
     protected void DeleteTrack_Click(object sender, EventArgs e)
     {
-       
+        if (PlayList.Rows.Count == 0)
+        {
+            MessageUserControl.ShowInfo("Warning", "No playlist has been retrieved");
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(PlaylistName.Text))
+            {
+                MessageUserControl.ShowInfo("Warning", "No playlist name has been supplied");
+            }
+            else
+            {
+                //collect the selected tracks to delete
+                List<int> tracksToDelete = new List<int>();
+                int selectedRows = 0; //counter
+                CheckBox playlistSelection = null;
+                for (int i = 0; i < PlayList.Rows.Count; i++)
+                {
+                    playlistSelection = PlayList.Rows[i].FindControl("Selected") as CheckBox;
+                    if (playlistSelection.Checked)
+                    {
+                        tracksToDelete.Add(int.Parse((PlayList.Rows[i].FindControl("TrackID") as Label).Text));
+                        selectedRows++;
+                    }
+                }
+                if(selectedRows  == 0)
+                {
+                    MessageUserControl.ShowInfo("Information", "No playlist tracks have been selected");
+                }
+                else
+                {
+                    //at this point you have your required data. send to BLL for processing
+                    MessageUserControl.TryRun(() =>
+                    {
+                        PlaylistTracksController sysmgr = new PlaylistTracksController();
+                        List<UserPlaylistTrack> playlistData = sysmgr.DeleteTracks(User.Identity.Name, PlaylistName.Text, tracksToDelete);
+                        PlayList.DataSource = playlistData;
+                        PlayList.DataBind();
+
+
+                    }, "Removed", "Tracks have been removed");
+
+                }
+            }
+        }
     }
 }

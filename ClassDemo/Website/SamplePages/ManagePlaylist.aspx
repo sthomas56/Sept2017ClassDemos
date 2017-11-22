@@ -172,6 +172,8 @@
                  style="color:red"></span>
         </asp:LinkButton>
         <br /><br />
+        
+        <%--Display of the current tracks on the playlist--%>
         <asp:GridView ID="PlayList" runat="server" AutoGenerateColumns="False"
              Caption="PlayList" GridLines="Horizontal" BorderStyle="None">
             <Columns>

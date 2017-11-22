@@ -201,12 +201,50 @@ namespace ChinookSystem.BLL
         }//eom
 
 
-        public void DeleteTracks(string username, string playlistname, List<int> trackstodelete)
+        public List<UserPlaylistTrack> DeleteTracks(string username, string playlistname, List<int> trackstodelete)
         {
             using (var context = new ChinookContext())
             {
-               //code to go here
+                //find the parent, then the kids
+                Playlist exists = (from x in context.Playlists
+                                   where x.UserName.Equals(username, StringComparison.OrdinalIgnoreCase) && x.Name.Equals(playlistname, StringComparison.OrdinalIgnoreCase)
+                                   select x).FirstOrDefault();
+                //FirstOrDefault() brings in a collection and takes the first one, or default which is null
 
+                if (exists == null)
+                {
+                    throw new Exception("Playlist has been removed");
+                }
+                else
+                {
+                    //the tracks that are to be kept
+                    var tracksKept = exists.PlaylistTracks.Where(tr => !trackstodelete.Any(tdo => tdo == tr.TrackId)).Select(tr => tr);
+
+                    //remove the tracks in the tracksToDelete list
+                    PlaylistTrack item = null;
+                    foreach(var deleteTrack in trackstodelete)
+                    {
+                        item = exists.PlaylistTracks.Where(dx => dx.TrackId == deleteTrack).FirstOrDefault();
+
+                        if (item != null)
+                        {
+                            exists.PlaylistTracks.Remove(item);
+                        }
+                    }
+
+                    //renumber the tracks so that the track number is sequential, as is expected by all other operations
+                    //in our DB there is NO holes in the numeric sequence
+                    int number = 1;
+                    foreach(var trackKept in tracksKept)
+                    {
+                        trackKept.TrackNumber = number;
+                        context.Entry(trackKept).Property(y => y.TrackNumber).IsModified = true;
+                        number++;
+                    }
+
+                    context.SaveChanges();
+                    return List_TracksForPlaylist(playlistname, username);
+                }
 
             }
         }//eom
